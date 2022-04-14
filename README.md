@@ -105,6 +105,8 @@ To declare a variable without assigning any value we should do it like the next 
 
 
 - are they value types or reference types?
+  - when using an asterisk is a reference type (sending the pointer)
+  - when not using the asterisk is the value type
 
 ## Functions
 functions can return more than one type, and seems very common that they return a value and then another parameter with the error.
