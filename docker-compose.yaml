@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: MySql
+    environment:
+      MYSQL_DATABASE: 'testgo'
+      MYSQL_USER: 'gouser'
+      MYSQL_PASSWORD: 'gopass'
+      MYSQL_ROOT_PASSWORD: 'gopass'
+    ports:
+      # normally will be 3306:3306 but 3306 is busy in my local machine.
+      - 3307:3306
+    volumes:
+      - ./tools/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql

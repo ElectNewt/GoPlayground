@@ -1,12 +1,16 @@
 package main
 
 import (
+	"example/apirest/Dtos"
+	"example/apirest/repos"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
 )
 
-var repo IRepository
+var repo repos.IRepository
+
+//this should be split in proper services, but the logic is very simple
 
 func showHelloWorld(c *gin.Context) {
 	c.String(http.StatusOK, "%s", "hello world")
@@ -17,7 +21,7 @@ func getAlbums(c *gin.Context) {
 }
 
 func postAlbums(c *gin.Context) {
-	var newAlbum album
+	var newAlbum Dtos.Album
 
 	// Call BindJSON to bind the received JSON to
 	// newAlbum.
@@ -26,7 +30,7 @@ func postAlbums(c *gin.Context) {
 	}
 
 	// Add the new album to the slice.
-	repo.AddAlbum(newAlbum)
+	newAlbum = repo.AddAlbum(newAlbum)
 	c.IndentedJSON(http.StatusCreated, newAlbum)
 }
 

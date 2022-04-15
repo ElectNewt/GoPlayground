@@ -444,14 +444,106 @@ fmt.Println(testArray)
 
 
 ## structs 
-TODO: fill the documentation
+TODO: fill the documentation, but basically objects.
 
 
 ## API
+in here I realized the next:
+- simple Get/Create Api Endpoints
+- What I think is DI in Golang (this part still not clear, I can't find proper stuff on internet)
+- Mysql for data persistence
+- Unit testing (pending)
+- Swagger (pending)
+
 use gin, added it as a dependency, to get it you have to use `go get .`
 
 - investigate if there is any other way than "gin" to run apis.
-- 
+
 But it seems quite simple.
 
 and just run it for a simple example.
+
+
+
+### how I organized it (structure)
+
+I created a similar structure of what .NET apis contains.
+
+The main package and the main function contains the "startup", so the endpoints and the configuration (which repo is using, etc)
+- NOTE: the "inMemory" is commented, and to run the database one it is using docker.
+
+
+I tried to implement Dependency Injection (not sure if it is done correctly), I created a file called `albumService` which contains the interface and the "logic" is quite simple so a single service is being used.
+
+this `AlbumService` is the one I will create the unit testing later on (mocking the information).
+
+Eventually I would like to do also integration testing, but it seems that i can do it with docker on an easy way. 
+
+And then I did the repos. I created an interface, so I can switch between the `InMemory` and the `Sql` one.
+
+### Alerts/break
+the way of breaking the code, like an exception is using `panic("implement me")`
+
+### Connect to SQL
+To connect to MySQL i had to import
+
+````go
+
+"database/sql"
+_ "github.com/go-sql-driver/mysql"
+````
+- Investigate what the `_` character is for.
+
+then just connect: 
+````go
+//TODO: find a way to define this in a file like the appsettings
+const (
+	username = "gouser"
+	password = "gopass"
+	hostname = "127.0.0.1:3307"
+	dbname   = "testgo"
+)
+
+func GetDb() (db *sql.DB, err error) {
+	db, err = sql.Open("mysql", username+":"+password+"@("+hostname+")/"+dbname)
+	return
+}
+
+````
+- Investigate how to specify that configuration in files like in C# or any other technique.
+
+### Query
+To query, we have to type the query manually 
+- Investigate if there is orm like EF or Dapper,
+- what about slq injection.
+
+the query returns the `row` and the `error`
+````go
+rows, error := repo.Db.Query("select * from album where Id = ?")
+````
+
+then we should iterate rows, using `.Next()` and map into an object. Even if there is only one element.
+
+- When an item does not exist, for example by id, it does return a `Default` object. Is there something similar as `nullable` in C#?
+
+### Insert
+To insert an element the idea is the same, the query and then `.Exec()`
+````go
+func (repo SqlRepository) AddAlbum(album Dtos.Album) {
+	query := "INSERT INTO Album(Title, Artist, Price) " +
+		"VALUES (?, ?, ?)"
+	repo.Db.Exec(query, album.Title, album.Artist, album.Price)
+
+}
+````
+#### Get last inserted Id
+to get the last inserted id we can retrieve the value of `Exec()`
+````go
+result, err :=repo.Db.Exec(qu...)
+````
+and then result has a function called `.LastInsertedId()`
+
+
+### Update
+update is the same story, but is boring to have to do it manually
+
