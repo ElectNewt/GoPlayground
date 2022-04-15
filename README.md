@@ -452,7 +452,7 @@ in here I realized the next:
 - simple Get/Create Api Endpoints
 - What I think is DI in Golang (this part still not clear, I can't find proper stuff on internet)
 - Mysql for data persistence
-- Unit testing (pending)
+- Unit testing 
 - Swagger (pending)
 
 use gin, added it as a dependency, to get it you have to use `go get .`
@@ -516,6 +516,7 @@ func GetDb() (db *sql.DB, err error) {
 To query, we have to type the query manually 
 - Investigate if there is orm like EF or Dapper,
 - what about slq injection.
+- Investigate about dispose the connections 
 
 the query returns the `row` and the `error`
 ````go
@@ -547,3 +548,11 @@ and then result has a function called `.LastInsertedId()`
 ### Update
 update is the same story, but is boring to have to do it manually
 
+## Testing
+The name of the file must end in `_test` and the test name must start for `Test`.
+wtf.
+
+I am trying to figure it out if there is any library like `moq` in c#; all examples I find on internet are with fakes.
+
+
+the assertion is doing an if and trigger a failure if it fails.

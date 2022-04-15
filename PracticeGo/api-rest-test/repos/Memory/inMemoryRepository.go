@@ -32,6 +32,7 @@ func (repo InMemoryRepository) GetAlbumById(id int) (Dtos.Album, error) {
 	return Dtos.Album{}, errors.New("album not found")
 }
 func (repo InMemoryRepository) AddAlbum(album Dtos.Album)  Dtos.Album {
+	album.ID = int64(len(repo.albums)) + 1
 	repo.albums = append(repo.albums, album)
 	return album
 }

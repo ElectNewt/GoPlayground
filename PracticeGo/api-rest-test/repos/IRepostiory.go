@@ -10,3 +10,4 @@ type IRepository interface {
 	AddAlbum(album Dtos.Album)  Dtos.Album
 }
 
+var Repo IRepository
